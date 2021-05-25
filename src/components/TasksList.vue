@@ -6,23 +6,7 @@
         v-on:click="newFormVisible = !newFormVisible">
             {{newFormVisible ? "x" : "+"}}
       </button>
-      <div 
-        v-show="newFormVisible"
-        class="task-card new-task"
-        @keyup.enter="addTask(newTitle, newDescription), resetForm()"
-        >
-        <div>
-            <input
-            type="text"
-            placeholder="What would you like to do?"
-            v-model="newTitle"
-            />
-            <textarea
-            placeholder="Add some details about your task..."
-            v-model="newDescription"
-            ></textarea>
-        </div>
-      </div>
+      <NewTask v-if="newFormVisible" @add-task="addTask" />
       <TaskCard
         v-for="(task, index) in tasks"
         :key="index"
@@ -37,9 +21,12 @@
 
 <script>
 import TaskCard from './TaskCard.vue'
+import NewTask from './NewTask.vue'
+
 export default ({
   components: {
-    TaskCard
+    TaskCard,
+    NewTask
   },
   data() {
     return {
@@ -76,7 +63,12 @@ export default ({
     resetForm(){
         this.newDescription = ""
         this.newTitle = ""
-    }
+    },
+    toggleTask(taskIndex) {
+      const taskToUpdate = this.tasks[taskIndex];
+      taskToUpdate.done = !taskToUpdate.done;
+      this.$set(this.tasks, taskIndex, taskToUpdate);
+    },
   }
 })
 </script>
