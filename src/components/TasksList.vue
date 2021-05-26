@@ -1,12 +1,12 @@
 <template>
   <div id="tasks">
-    <div v-if="tasks.length > 0" class="tasks-list">
       <button
         class="btn round-icon"
         v-on:click="newFormVisible = !newFormVisible">
             {{newFormVisible ? "x" : "+"}}
       </button>
       <NewTask v-if="newFormVisible" @add-task="addTask" />
+    <div v-if="tasks.length > 0" class="tasks-list">
       <TaskCard
         v-for="(task, index) in tasks"
         :key="index"
@@ -14,6 +14,7 @@
         :description="task.description"
         :done="task.done"
       />
+      <a href="#" @click="resetTasks()" class="reset-link">Reset tasks</a>
     </div>
     <p v-else-if="!newFormVisible">You don't have any tasks yet...</p>
   </div>
@@ -68,6 +69,10 @@ export default ({
       const taskToUpdate = this.tasks[taskIndex];
       taskToUpdate.done = !taskToUpdate.done;
       this.$set(this.tasks, taskIndex, taskToUpdate);
+    },
+    resetTasks() {
+      localStorage.setItem("tasks", null);
+      this.tasks = [];
     },
   }
 })
